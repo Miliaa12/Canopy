@@ -1,13 +1,13 @@
 use color_eyre::Result;
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
+    DefaultTerminal, Frame,
     buffer::Buffer,
     layout::Rect,
     style::Stylize,
     symbols::border,
     text::Line,
     widgets::{Block, Paragraph, Widget},
-    DefaultTerminal, Frame,
 };
 
 #[derive(Debug, Default)]
@@ -32,10 +32,10 @@ impl App {
     fn handle_events(&mut self) -> Result<()> {
         // crossterm also emits key release/repeat events on Windows, so only
         // act on key presses.
-        if let Event::Key(key_event) = event::read()? {
-            if key_event.kind == KeyEventKind::Press {
-                self.handle_key_event(key_event);
-            }
+        if let Event::Key(key_event) = event::read()?
+            && key_event.kind == KeyEventKind::Press
+        {
+            self.handle_key_event(key_event);
         }
         Ok(())
     }
